@@ -26,13 +26,13 @@
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
 
-    // Background image
+    // Background image (forest road)
     const bg = new Image();
-    bg.src = "https://images.unsplash.com/photo-1506443432602-ac2fcd6f54e1?q=80&w=1920&auto=format&fit=crop";
+    bg.src = "https://picsum.photos/960/540?random=1";
 
-    // Car image (replace with your own transparent PNG if you want)
+    // Car image (transparent PNG top-down)
     const car = new Image();
-    car.src = "https://i.imgur.com/yYl9YcU.png";
+    car.src = "https://i.ibb.co/1b9q8WZ/car-top.png";
 
     const player = { x: 430, y: 350, w: 64, h: 112, speed: 5 };
 
@@ -46,15 +46,26 @@
       if(keys['a']) player.x -= player.speed;
       if(keys['d']) player.x += player.speed;
 
-      // Keep car on screen
       player.x = Math.max(0, Math.min(canvas.width-player.w, player.x));
       player.y = Math.max(0, Math.min(canvas.height-player.h, player.y));
     }
 
     function draw(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(bg,0,0,canvas.width,canvas.height);
-      ctx.drawImage(car,player.x,player.y,player.w,player.h);
+
+      if(bg.complete) {
+        ctx.drawImage(bg,0,0,canvas.width,canvas.height);
+      } else {
+        ctx.fillStyle = "#333";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+      }
+
+      if(car.complete) {
+        ctx.drawImage(car,player.x,player.y,player.w,player.h);
+      } else {
+        ctx.fillStyle = "red";
+        ctx.fillRect(player.x,player.y,player.w,player.h);
+      }
     }
 
     function loop(){
